@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+    {% block CSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    {% endblock CSS %}
+
+    <!-- Nav bar -->
+    {% block home %}
+      <li ><a href="{{ url_for('home.home') }}">Home</a></li>
+    {% endblock home %}
+
+   {% block users %}
+   <li class="current"><a  href="{{ url_for('users.users_list') }}">Users</a></li>
+   {% endblock users %}
+  <!-- end Nav bar -->
+
+    {% block content %}
+   <section id="user-movies">
+
+       <div class="back-link">
+           <a href="{{ url_for('users.users_list') }}" class=""><i class="fa fa-angle-left fa-lg"></i> Go Back to
+               Users</a>
+       </div>
+
+      <div class="row">
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                        <div class="message">
+                            {% for category, message in messages %}
+                                <span class="message {{ category }}">{{ message }}</span>
+                            {% endfor %}
+                        </div>
+                {% endif %}
+            {% endwith %}
+
+         <div class="twelve columns">
+             <h1>@{{ user.username }}</h1>
+             <p class="add-bottom">Click movie poster to see more details</p>
+
+                <!-- movies-wrapper -->
+                <div id="movies-wrapper" class="bgrid-quarters s-bgrid-thirds">
+                {% if not user_movies %}
+                    <div class="movie-item">
+                        <p>No Movies</p>
+                    </div>
+                {% else %}
+                    {% for movies in user_movies %}
+                        {% if movies %}
+                           <div class="columns movie-item align-center">
+                              <div class="item-wrap">
+                                 <a href="#{{ movies.title.split()[0]  }}" title="" class=" ">
+                                    <img alt="movie-name" src="{{ movies.cover_url }}">
+                                    <div class="overlay">
+                                       <div class="movie-item-meta">
+                                              <h5>{{ movies.name }}</h5>
+                                       </div>
+                                    </div>
+                                    <div class="link-icon"><i class="icon-plus"></i></div>
+                                 </a>
+                              </div>
+                           </div> <!-- movie-item end -->
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                </div> <!-- movie-wrapper end -->
+         </div> <!-- twelve columns end -->
+
+          {% for movies in user_movies %}
+              {% if movies %}
+                 <!-- Modal Popup
+                  --------------------------------------------------------------- -->
+                 <div id="{{ movies.title.split()[0] }}" class="popup-modal mfp-hide">
+                     <div class="square-image">
+                         <img class="scale-with-grid" src="{{ movies.cover_url }}" alt="" />
+                     </div>
+
+                     <div class="movie-plot">
+                          <h4>{{ movies.name }}</h4>
+                          <p>{{ movies.movie_plot }}</p>
+                       <span class="movie-actors"><span>Actors: </span>{{ movies.actors }}</span>
+                       <span class="movie-actors"><i class="fa fa-tag"></i><span>Genre: </span>{{ movies.genre
+                           }}</span>
+                     </div>
+                     <div class="link-box">
+                       <a href="https://www.imdb.com/title/{{ movies.trailer_id }}/" target="_blank">Movie Trailer</a>
+                         <a class="popup-modal-dismiss">Close</a>
+                     </div>
+                 </div><!-- {{ movies.name }}modal End -->
+              {% endif %}
+          {% endfor %}
+      </div> <!-- row End -->
+
+   </section>
+    {% endblock content %}

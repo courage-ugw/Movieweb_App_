@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block form %}{% endblock form %}
+
+{% block content %}
+<!-- Home Page -->
+   <header id="home">
+
+      <div class="banner">
+         <div class="banner-text">
+            <h1>Movie App.</h1>
+            <h3>
+              Manage and keep track of your  <span>favourite movies.</span>
+            </h3>
+            <hr />
+         </div>
+          <div>
+             <form action="/users/signup">
+                <button class="submit">Get Started</button>
+             </form>
+
+         </div>
+      </div>
+   </header> <!-- Header End -->
+{% endblock content %}

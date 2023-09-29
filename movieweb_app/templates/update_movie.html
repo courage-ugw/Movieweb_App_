@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block CSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+{% endblock CSS %}
+
+<!-- Nav bar -->
+{% block home %}
+  <li ><a href="{{ url_for('home.home') }}">Home</a></li>
+{% endblock home %}
+
+{% block account %}
+    <li class="current"><a href="{{ url_for('movies.add_movie', user_id=current_user.id) }}">Account</a></li>
+{% endblock account %}
+<!-- end Nav bar -->
+
+{% block content %}
+<section id="sign-up">
+
+    <div class="row align-center">
+        <p> UPDATE </p>
+    </div>
+    <div class="row">
+        <div class="seven row align-center">
+            <form action="{{ url_for('movies.update_movie', user_id=user_id, movie_id=user_movie.id) }}" method="POST"
+                  class="align-center">
+
+                <fieldset class="align-center">
+                    <label for="movie_name">Title (Readonly) </label>
+                    <input type="text" id="movie_name" name="movie_name" class="form-input" required readonly="readonly"
+                           value="{{ user_movie.title }}">
+
+                    <label for="movie_actors">Actors: </label>
+                    <input type="text" id="movie_actors" name="movie_actors" class="form-input" required
+                           value="{{ user_movie.actors }}">
+
+                    <label for="movie_genre">Genre: </label>
+                    <input type="text" id="movie_genre" name="movie_genre" class="form-input" required
+                           value="{{ user_movie.genre }}">
+
+                    <label for="movie_plot">Movie Plot: </label>
+                    <textarea id="movie_plot" name="movie_plot" class="form-input" required
+                              rows="5"> {{ user_movie.plot }} </textarea>
+
+                    <div>
+                        <button type="submit" class="">Update</button>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+{% endblock content %}

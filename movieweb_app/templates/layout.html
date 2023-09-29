@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<head>
+
+   <!--- Basic Page Settings
+   ================================================== -->
+   <meta charset="utf-8">
+	<title> Movieweb App</title>
+
+   <!-- Mobile Specific Metas
+   ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<!-- CSS
+    ================================================== -->
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/magnific-popup.css') }}">
+   {% block CSS %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+   {% endblock CSS %}
+
+   <!-- FONT AWESOME
+    ================================================== -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- Nav bar -->
+      <nav id="nav-wrap">
+          <ul id="nav" class="nav align-center">
+              {% block home %}
+              <li class="current"><a href="{{ url_for('home.home') }}">Home</a></li>
+              {% endblock home %}
+
+              {% block users %}
+                <li><a  href="{{ url_for('users.users_list') }}">Users</a></li>
+              {% endblock users %}
+
+              {% if current_user.is_authenticated %}
+
+                  {% block account %}
+                   <li ><a href="{{ url_for('movies.add_movie', user_id=current_user.id) }}">Account</a></li>
+                  {% endblock account %}
+
+                  {% block signout %}
+                  <li><a href="{{ url_for('users.signout') }}">Sign out</a></li>
+                  {% endblock signout %}
+
+              {% else %}
+
+                  {% block signin %}
+                  <li><a href="{{ url_for('users.signin') }}">Sign in</a></li>
+                  {% endblock signin %}
+              {% endif %}
+          </ul>
+      </nav> <!-- end nav-bar -->
+
+   {% block content %}
+<!--        other page's contents go in here-->
+   {% endblock content %}
+
+   <!-- Java Script
+   ================================================== -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script src="{{ url_for('static', filename='js/jquery.fittext.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/jquery.magnific-popup.min.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+</body>
+
+</html>

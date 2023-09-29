@@ -1,0 +1,51 @@
+{% extends "index.html" %}
+
+{% block CSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+{% endblock CSS %}
+
+<!-- Nav bar -->
+{% block home %}
+  <li ><a href="{{ url_for('home.home') }}">Home</a></li>
+{% endblock home %}
+
+{% block signup %}
+<li class="current"><a href="{{ url_for('users.signup') }}">Sign up</a></li>
+{% endblock signup %}
+<!-- end Nav bar -->
+
+{% block content %}
+<section id="sign-up">
+
+     {% include "messages.html" %}
+
+    <div class="row align-center">
+        <p> SiGN-UP</p>
+    </div>
+    <div class="row">
+        <div class="seven row align-center">
+            <form action="{{ url_for('users.signup') }}" method="POST"  class="align-center">
+                 {{ form.hidden_tag() }}
+
+                <fieldset class="align-center">
+                    {{ form.display_name(class="form-input", placeholder=" Enter your display name")}}
+
+                    {{ form.username(class="form-input", placeholder=" Enter your username")}}
+
+                    {{ form.email(class="form-input", placeholder=" Enter your email")}}
+
+                    {{ form.password(class="form-input", placeholder=" Type your password")}}
+
+                    {{ form.confirm_password(class="form-input", placeholder=" Confirm password")}}
+
+                    <div>
+                        <button type="submit" class="signup-button">{{ form.submit.label.text }}</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+    </div>
+
+</section>
+{% endblock content %}

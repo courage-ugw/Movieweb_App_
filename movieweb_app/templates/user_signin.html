@@ -1,0 +1,56 @@
+{% extends "index.html" %}
+
+{% block CSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+{% endblock CSS %}
+
+<!-- Nav bar -->
+{% block home %}
+  <li ><a href="{{ url_for('home.home') }}">Home</a></li>
+{% endblock home %}
+
+{% block signin %}
+<li class="current"><a href="{{ url_for('users.signin') }}">Sign in</a></li>
+{% endblock signin %}
+<!-- end Nav bar -->
+
+{% block content %}
+<section id="sign-in">
+
+    {% include "messages.html" %}
+
+    <div class="row align-center">
+        <p> SiGN-IN</p>
+    </div>
+    <div class="row">
+        <div class="seven row align-center">
+            <form action="{{ url_for('users.signin') }}" method="POST" class="align-center">
+                {{ form.hidden_tag() }}
+                <fieldset class="align-center">
+                    {{ form.email(class="form-input", placeholder=" Enter your email")}}
+                    {% for error in form.email.errors %}
+                        <span class="form-error">{{ error }}</span>
+                    {% endfor %}
+
+                    {{ form.password(class="form-input", placeholder=" Type your password")}}
+                    {% for error in form.password.errors %}
+                        <span class="form-error">{{ error }}</span>
+                    {% endfor %}
+
+                    <div>
+                        <button type="submit" class="signup-button">{{ form.submit.label.text }}</button>
+                    </div>
+                    <div id="message-success">
+                        <a href="{{ url_for('users.signup') }}" class="signup-ref-link">Sign up</a>
+                        <a href="">Forgot Password ?</a><br>
+                    </div>
+                </fieldset>
+            </form>
+
+
+        </div>
+
+    </div>
+
+</section>
+{% endblock content %}

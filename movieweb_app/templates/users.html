@@ -1,0 +1,260 @@
+{% extends "layout.html" %}
+    {% block CSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    {% endblock CSS %}
+
+<!-- Nav bar -->
+{% block home %}
+  <li ><a href="{{ url_for('home.home') }}">Home</a></li>
+{% endblock home %}
+
+{% block users %}
+<li class="current"><a  href="{{ url_for('users.users_list') }}">Users</a></li>
+{% endblock users %}
+<!-- end Nav bar -->
+
+{% block content %}
+<section id="users">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+                <div class="message">
+                    {% for category, message in messages %}
+                        <span class="message {{ category }}">{{ message }}</span>
+                    {% endfor %}
+                </div>
+        {% endif %}
+    {% endwith %}
+
+  <div class="row wide">
+     <div class="row six main-col align-center">
+
+            {% if current_user.is_authenticated %}
+
+                <div class="twelve user-movie-info add-bottom signedin-user">
+                   <div class="row">
+                       <img class="profilepic" alt="movie-name"
+                            src="{{ url_for('static', filename='images/into-the-light.jpg') }}">
+
+                       <h3 class="user pull-left">{{ current_user.name }}</h3> <br>
+                        <p class="pull-left half-bottom">@{{ current_user.username }}</p>
+                       <p class="pull-right half-bottom"><em class="date">{{ signed_in_user.date }}</em></p>
+                   </div>
+                   <hr>
+                    {% if not signed_in_user.movies %}
+                        <div class="row align-center user-movie-stats">
+                            <p>Hey, {{ current_user.name.split()[0]}}! click the `Account Menu` to start adding your
+                                Favourite Movies</p>
+                        </div>
+                    {% else %}
+                    <div class="row align-center user-movie-stats">
+                       <div class="row pull-left">
+                            <label class="movie-details pull-left">
+                               Favourite Movies
+                           </label>
+                           <label class="movie-details-result pull-left">
+                               {{ signed_in_user.favourite_movies }}
+                           </label>
+                        </div>
+
+                       <div class="row pull-left">
+                           <label class="movie-details pull-left">
+                               Movies above 7.0 Rating
+                           </label>
+                           <label class="movie-details-result pull-left">
+                               {{ signed_in_user.highly_rated }}
+                           </label>
+                       </div>
+
+                       <div class="row pull-left">
+                           <label class="movie-details pull-left">
+                               Movies Released after 2021
+                           </label>
+                           <label for="" class="movie-details-result pull-left">
+                               {{ signed_in_user.recent_movies }}
+                           </label>
+                       </div>
+
+                       <div class="row pull-left">
+                            <label class="movie-details pull-left">
+                               You've Watched
+                           </label>
+                           <label class="movie-details-result pull-left">
+                               {{ signed_in_user.movies_watched }}/{{ signed_in_user.favourite_movies }}
+                           </label>
+                       </div>
+
+                       <div class="row pull-left">
+                           <label class="movie-details pull-left">
+                               Movie with lowest Rating
+                           </label>
+                           <label class="movie-details-result pull-left">
+                               {{ signed_in_user.worst_rating }}
+                           </label>
+                       </div>
+
+                       <div class="row pull-left">
+                           <label class="movie-details pull-left">
+                               Movies with Award
+                           </label>
+                           <label class="movie-details-result pull-left">
+                               {{ signed_in_user.movie_awards }}
+                           </label>
+                       </div>
+
+                       <div class="row pull-left">
+                            <label class="movie-details pull-left">
+                               Most of your Movies from
+                           </label>
+                           {% if signed_in_user.most_movies_countries|length == 0 %}
+                                   <label class="movie-details-result pull-left">
+                                       country (unknown)
+                                   </label>
+                           {% else %}
+                               {% for country, count in signed_in_user.most_movies_countries %}
+                                   <label class="movie-details-result pull-left">
+                                       {{ country }} ({{ count }})
+                                   </label>
+                               {% endfor %}
+                           {% endif %}
+                       </div>
+
+                       <div class="row pull-left">
+                            <label class="movie-details pull-left">
+                               Your Top Rated Movie
+                           </label>
+                           {% set movie, rating = signed_in_user.top_rated_movie_name %}
+                               <label class="movie-details-result pull-left">
+                                   {{ movie }} ({{ rating }})
+                               </label>
+                       </div>
+                   </div>
+                    {% endif %}
+                   <hr>
+                   <div class="row more-movie-info">
+                       <div class="likes pull-left">
+                           <a href="#"><i class="fa fa-thumbs-up fa-lg"></i></a>
+                          <span class="like-count">{{ signed_in_user.likes }}</span>
+                        </div>
+
+                       <a href="{{ url_for('users.user_movies', user_id=signed_in_user.id) }}"
+                          class="details-link pull-right"><em>Details <i class="fa fa-angle-right"></i></em></a>
+                   </div>
+               </div>
+            {% endif %}
+
+             {% for user in users %}
+                    <div class="twelve user-movie-info add-bottom">
+                       <div class="row">
+                           <img class="profilepic" alt="movie-name"
+                                src="{{ url_for('static', filename='images/girl.jpg') }}">
+                           <h3 class="user pull-left">{{ user.name }}</h3> <br>
+                            <p class="pull-left half-bottom">@{{ user.username }}</p>
+                           <p class="pull-right half-bottom"><em class="date">{{ user.date }}</em></p>
+                       </div>
+                       <hr>
+                        {% if not user.movies %}
+                            <div class="row align-center user-movie-stats">
+                                <p> {{ user.name.split()[0]}} is yet to add Favourite Movies</p>
+                            </div>
+                        {% else %}
+                            <div class="row align-center user-movie-stats">
+                           <div class="row pull-left">
+                                <label class="movie-details pull-left">
+                                   Favourite Movies
+                               </label>
+                               <label for="" class="movie-details-result pull-left">
+                                   {{ user.favourite_movies }}
+                               </label>
+                            </div>
+
+                           <div class="row pull-left">
+                               <label class="movie-details pull-left">
+                                   Movies above 7.0 Rating
+                               </label>
+                               <label class="movie-details-result pull-left">
+                                   {{ user.highly_rated }}
+                               </label>
+                           </div>
+
+                           <div class="row pull-left">
+                               <label class="movie-details pull-left">
+                                   Movies Released after 2021
+                               </label>
+                               <label class="movie-details-result pull-left">
+                                   {{ user.recent_movies }}
+                               </label>
+                           </div>
+
+                           <div class="row pull-left">
+                                <label class="movie-details pull-left">
+                                   You've Watched
+                               </label>
+                               <label for="" class="movie-details-result pull-left">
+                                   {{ user.movies_watched }}/{{ user.favourite_movies }}
+                               </label>
+                           </div>
+
+                           <div class="row pull-left">
+                               <label for="" class="movie-details pull-left">
+                                   Movie with lowest Rating
+                               </label>
+                               <label class="movie-details-result pull-left">
+                                   {{ user.worst_rating }}
+                               </label>
+                           </div>
+
+                            <div class="row pull-left">
+                               <label for="" class="movie-details pull-left">
+                                   Movies with Award
+                               </label>
+                               <label class="movie-details-result pull-left">
+                                   {{ user.movie_awards }}
+                               </label>
+                           </div>
+
+                           <div class="row pull-left">
+                                <label for="" class="movie-details pull-left">
+                                   Most of your Movies from
+                               </label>
+                               {% if user.most_movies_countries|length == 0 %}
+                                   <label class="movie-details-result pull-left">
+                                       country (unknown)
+                                   </label>
+                               {% else %}
+                                   {% for country, count in user.most_movies_countries %}
+                                   <label class="movie-details-result pull-left">
+                                       {{ country }} ({{ count }})
+                                   </label>
+                                   {% endfor %}
+                               {% endif %}
+                           </div>
+
+                           <div class="row pull-left">
+                                <label class="movie-details pull-left">
+                                   Your Top Rated Movie
+                               </label>
+                               {% set movie, rating = user.top_rated_movie_name %}
+                                   <label for="" class="movie-details-result pull-left">
+                                       {{ movie }} ({{ rating }})
+                                   </label>
+                           </div>
+                       </div>
+                        {% endif %}
+                       <hr>
+                       <div class="row more-movie-info">
+                           <div class="likes pull-left">
+                               <a href="#"><i class="fa fa-thumbs-up fa-lg"></i></a>
+                              <span class="like-count">{{ user.likes }}</span>
+                            </div>
+
+                           <a href="{{ url_for('users.user_movies', user_id=user.id) }}"
+                              class="details-link pull-right"><em>Details <i class="fa fa-angle-right"></i></em></a>
+                       </div>
+                   </div>
+             {% endfor %}
+
+           </div>
+     </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% block form %}
+<!-- Display Form Errors to users -->
+    {% if form.errors %}
+            <div class="message error">
+            {% for field_name, errors in form.errors.items() %}
+                    {% for error in errors %}
+                        <span class="message error">{{ error }}</span>
+                    {% endfor %}
+            {% endfor %}
+            </div>
+    {% endif %}
+{% endblock form %}
+
+    <!-- Display Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+                <div class="message">
+                    {% for category, message in messages %}
+                        <span class="message {{ category }}">{{ message }}</span>
+                    {% endfor %}
+                </div>
+        {% endif %}
+    {% endwith %}

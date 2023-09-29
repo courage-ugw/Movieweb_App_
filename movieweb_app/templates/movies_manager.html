@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+
+{% block CSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+{% endblock CSS %}
+
+<!-- Nav bar -->
+{% block home %}
+<li><a href="{{ url_for('home.home') }}">Home</a></li>
+{% endblock home %}
+
+{% if current_user.is_authenticated %}
+    {% block account %}
+    <li class="current"><a href="{{ url_for('movies.add_movie', user_id=current_user.id) }}">Account</a></li>
+    {% endblock account %}
+{% endif %}
+<!-- end Nav bar -->
+
+{% block content %}
+<section id="movies-manager">
+
+    {% if current_user.is_authenticated %}
+        <div class="account-links item-wrap">
+            <a href="#" class=""><i class="fas fa-user fa-lg"></i> Update Profile
+            </a>
+            <a href="#{{ current_user.id }}" class=""><i class="fas fa-ban "></i> Delete Account
+            </a>
+        </div>
+
+        <div class="row">
+            <div class="seven row align-center">
+                <div class="row align-center">
+                    <h1><span>Movies Manager</span></h1>
+                </div>
+
+                <div class="row add-movie align-center">
+                    <form action="{{ url_for('movies.add_movie', user_id=current_user.id) }}" method="POST">
+                        <div>
+                            <input type="text" placeholder="Enter Movie Name" name="movie_name">
+                            <button type="submit">Add Movie</button>
+                        </div>
+                    </form>
+                </div>
+
+                <p>Click the eye icon to toggle Watched Status! </p>
+                <p>Default is No.</p>
+
+                <div class="row movie-list-wrapper">
+                    <ul class="movie-list">
+                        {% for movies in user_movies %}
+                            {% if movies %}
+                                <li class="add-bottom">
+                                <span>{{ movies.title }}</span>
+                                <div>
+                                    <button type="submit">
+                                        <a href="{{ url_for('movies.update_movie', user_id=current_user.id, movie_id=movies.id) }}" >
+                                            <i class="fas fa-edit "></i>
+                                        </a>
+                                    </button>
+
+                                    <button class="item-wrap">
+                                        <a href="#{{ movies.id }}">
+                                            <i class="fas fa-trash  "></i>
+                                        </a>
+                                    </button>
+                                    <form
+                                            action="" method="POST">
+                                        <button type="submit">
+                                            {% if movies.watched == 'Yes' %}
+                                                <i class="fas fa-eye fa-lg"></i>
+                                            {% else %}
+                                                <i class="fas fa-eye-slash "></i>
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </div>
+                                <label>
+                                    Already Watched Movie?:
+                                    <span class="watched">{{ movies.watched }}</span>
+                                </label>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                 {% for movies in user_movies %}
+                    {% if movies %}
+                        <!--     Delete Button modal               -->
+                        <div id="{{ movies.id }}" class=" popup-modal mfp-hide">
+                            <p>Are you sure you want to delete {{ movies.title }} ?</p>
+                            <form
+                                    action="{{ url_for('movies.delete_movie', user_id=current_user.id, movie_id=movies.id) }}"
+                                  method="POST">
+                                <button type="submit">
+                                    Delete
+                                </button>
+                                <button class="popup-modal-dismiss">
+                                    cancel
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <div id="{{ current_user.id }}" class=" popup-modal mfp-hide">
+                    <p>Are you sure you want to delete your account?</p>
+                    <form
+                            action="{{ url_for('users.delete_account', user_id=current_user.id) }}"
+                          method="POST">
+                        <button type="submit">
+                            Delete
+                        </button>
+                        <button class="popup-modal-dismiss">
+                            cancel
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endblock content %}
